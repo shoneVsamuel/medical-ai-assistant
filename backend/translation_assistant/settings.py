@@ -16,7 +16,13 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production'
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS fixed for Render
-ALLOWED_HOSTS = ['*', '.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'medical-ai-assistant-0gqk.onrender.com', 
+    '.onrender.com', 
+    'localhost', 
+    '127.0.0.1', 
+    '0.0.0.0'
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -116,3 +122,5 @@ CSRF_TRUSTED_ORIGINS = [
     'https://medical-ai-assistant-0gqk.onrender.com',
     'https://*.onrender.com'
 ]
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
