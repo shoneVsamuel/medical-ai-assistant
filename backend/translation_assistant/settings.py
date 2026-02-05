@@ -7,7 +7,7 @@ load_dotenv()
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+FRONTEND_DIR = os.path.join(BASE_DIR.parent.parent, 'Hos-frontend', 'dist')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production')
 
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'translation_assistant.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [FRONTEND_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,6 +94,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(FRONTEND_DIR, 'assets'),
+]
 
 # Storage strategy for WhiteNoise (handles compression and caching)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
