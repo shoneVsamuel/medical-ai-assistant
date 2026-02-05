@@ -1,5 +1,5 @@
-cat > backend/build.sh << 'EOF'
 #!/usr/bin/env bash
+# exit on error
 set -o errexit
 
 echo "Installing Python dependencies..."
@@ -11,8 +11,3 @@ python manage.py collectstatic --noinput
 
 echo "Running migrations..."
 python manage.py migrate
-
-echo "Verifying gunicorn installation..."
-which gunicorn
-gunicorn --version
-EOF
