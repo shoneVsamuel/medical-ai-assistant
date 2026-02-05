@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Exit on error
+cd backend
 set -o errexit
 
 echo "📦 Installing dependencies..."
