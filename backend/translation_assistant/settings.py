@@ -1,6 +1,3 @@
-"""
-Django settings for translation_assistant project.
-"""
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -8,16 +5,18 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+# On Render, this will be False unless you set a DEBUG=True environment variable
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','.onrender.com']
+# ALLOWED_HOSTS fixed for Render
+ALLOWED_HOSTS = ['*', '.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,14 +25,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',  # WhiteNoise helper
     'django.contrib.staticfiles',
     'corsheaders',
     'api',
-    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # MOVED TO TOP (Crucial for CSS)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -41,7 +41,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'translation_assistant.urls'
@@ -64,7 +63,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'translation_assistant.wsgi.application'
 
-# Database
+# Database - Using SQLite for now (Note: Data will reset on every Render deploy)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -74,18 +73,10 @@ DATABASES = {
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # Internationalization
@@ -97,6 +88,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Storage strategy for WhiteNoise (handles compression and caching)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
@@ -110,16 +104,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 
 # AI Provider Configuration
-# Set to 'openai' or 'gemini' (default: 'openai')
 AI_PROVIDER = os.getenv('AI_PROVIDER', 'openai')
-
-# OpenAI API Key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
-
-# Google Gemini API Key
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
+# CSRF Settings for Render
+CSRF_TRUSTED_ORIGINS = [
+    'https://medical-ai-assistant-0gqk.onrender.com',
+    'https://*.onrender.com'
+]
