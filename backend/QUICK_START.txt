@@ -1,0 +1,41 @@
+═══════════════════════════════════════════════════════════════
+  Django Backend - Quick Start Commands
+═══════════════════════════════════════════════════════════════
+
+1. INSTALL DEPENDENCIES
+   cd backend
+   pip install -r requirements.txt
+
+2. CREATE .env FILE
+   Create backend/.env with:
+   OPENAI_API_KEY=your_key_here
+   SECRET_KEY=your-secret-key
+   DEBUG=True
+
+3. RUN MIGRATIONS
+   python manage.py makemigrations
+   python manage.py migrate
+
+4. CREATE MEDIA DIRECTORIES
+   mkdir media
+   mkdir media\audio
+
+5. START SERVER
+   python manage.py runserver
+
+6. API WILL BE AT
+   http://localhost:8000/api/
+
+═══════════════════════════════════════════════════════════════
+  API Endpoints
+═══════════════════════════════════════════════════════════════
+
+POST /api/messages/send
+POST /api/audio/upload
+POST /api/summary/generate
+GET  /api/messages/search?q=keyword
+
+See README.md for detailed API documentation.
+
+
+
